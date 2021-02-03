@@ -1,10 +1,15 @@
 import './App.css';
-import Diff from './Diff';
+import Tabset from './Tabset';
 
+/**TODO
+ * - request array of files from backend through ajax 
+ * - pass this info to Tabset (somehow)
+ * - for each file, create a tab with a Diff, by passing a single ChangedFile object to each Tab's Diff
+ */
 function App() {
   return (
     <div className="App">
-      <Diff></Diff>
+      <Tabset></Tabset>
     </div>
   );
 }
