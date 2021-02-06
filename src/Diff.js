@@ -107,6 +107,8 @@ class Diff extends PureComponent {
       };
  
   render = () => {
+    let { oldCode } = this.props
+    let { newCode } = this.props
     return (
       <ReactDiffViewer
         oldValue={oldCode}
