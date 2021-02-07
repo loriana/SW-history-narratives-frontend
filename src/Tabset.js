@@ -3,37 +3,55 @@ import React, { Component } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Diff from './Diff';
+import {parseDiff, Diff, Hunk, tokenize} from 'react-diff-view';
+import 'react-diff-view/style/index.css';
+import refractor from 'refractor';
 
 
-//use the map method to map each object to a diff
+
 class Tabset extends Component {
+
+  renderToken = (token, defaultRender, i) => {
+    switch (token.type) {
+        case 'space':
+            console.log(token);
+            return (
+                <span key={i} className="space">
+                    {token.children && token.children.map((token, i) => renderToken(token, defaultRender, i))}
+                </span>
+            );
+        default:
+            return defaultRender(token, i);
+    }
+};
+
+customize_options(file) {
+  let file_path = file.newPath.split('.')
+  let extension = file_path[file_path.length-1]
+
+  let options = {
+    highlight: true,
+    refractor: refractor,
+    language: extension
+   }
+  return options
+}
 
   render() {
     let { files } = this.props
 
-    /*return (
-
-        <Tabs defaultActiveKey={ files[0].current_path }>
-        {
-          files.map(file => 
-          <Tab  key={file.current_path} eventKey={file.current_path} title={file.current_path}>
-            <div key={file.current_path} className="tab-item-wrapper">
-              <Diff key={file.current_path} oldCode={file.previous} newCode={file.current}></Diff>
-            </div>
-          </Tab>)
-        }
-      </Tabs>
-
-    );*/
     return (
 
-      <Tabs>
+      <Tabs defaultActiveKey={ files[0].newPath }>
       {
         files.map(file => 
-        <Tab  key={file.current_path} eventKey={file.current_path} title={file.current_path}>
-          <div key={file.current_path} className="tab-item-wrapper">
-            <Diff key={file.current_path} oldCode={file.previous} newCode={file.current}></Diff>
+        <Tab  key={file.newPath} eventKey={file.newPath} title={file.newPath}>
+          <div key={file.newPath} className="tab-item-wrapper">
+              <Diff 
+          key={file.oldRevision + '-' + file.newRevision} 
+          viewType="unified" diffType={file.type} 
+          hunks={file.hunks} 
+          tokens={tokenize(file.hunks, this.customize_options(file))}></Diff>
           </div>
         </Tab>)
       }
@@ -43,36 +61,3 @@ class Tabset extends Component {
 }
 
 export default Tabset;
-
-
-
-/**
- * PREVIOUS
- *
- * return (
-            <div className="tab-wrapper">
-              <div className='container-fluid' >
-                <div className="row">
-                  <div className="col-sm-12">
-
-
-                  <Tabs defaultActiveKey="profile">
-                      <Tab eventKey="home" title="index.js">
-                        <div className="tab-item-wrapper">
-                          <Diff></Diff>
-                        </div>
-                      </Tab>
-
-                      <Tab eventKey="contact" title="same_thing.js">
-                        <div className="tab-item-wrapper">
-                          <Diff></Diff>
-                        </div>
-                      </Tab>
-                    </Tabs>
-
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
- */
