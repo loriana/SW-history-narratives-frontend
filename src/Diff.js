@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
  
 const oldCode = `
 const a = 10
@@ -118,6 +118,7 @@ class Diff extends PureComponent {
         useDarkTheme={false}
         showDiffOnly={false}
         disableWordDiff={true}
+        compareMethod={DiffMethod.SENTENCES}
       />
     );
   };
