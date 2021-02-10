@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "gitdiff-parser": "^0.2.2",
+    "mmmagic": "^0.5.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
     "react-circular-progressbar": "^2.0.3",

@@ -24,19 +24,25 @@ class App extends Component {
   state = {
     next_sha: null,
     message: null,
-    files: []
+    files: [], 
+    theory: null
   }
 
+
+  //is there a theory resource?
+  //  if yes, is it a url? --> check if url valid --> if not valid grey out theory button
+  //  if no theory resource, grey out the theory button
   componentDidMount() {
 
     axios.get('http://localhost:3030/commits')
       .then(response => {
         console.log("IN COMPONENT DID MOUNT")
-        console.log(parseDiff(response.data.files))
+        console.log(response.data)
         this.setState({
           next_sha: response.data.next_sha,
           message: response.data.message,
-          files: parseDiff(response.data.files)
+          files: parseDiff(response.data.files), 
+          theory: response.data.theory
         })
       })
       .catch(error => {
@@ -52,7 +58,8 @@ class App extends Component {
         this.setState({
           next_sha: response.data.next_sha,
           message: response.data.message,
-          files: parseDiff(response.data.files)
+          files: parseDiff(response.data.files), 
+          theory: response.data.theory
         })
       })
       .catch(error => {
@@ -60,9 +67,34 @@ class App extends Component {
       })
   }
 
+  
+
+  //check whether theory ressource is a url or a document and render accordingly
+  handleTheory = () => {
+    console.log("Handle theory called")
+    console.log(this.state.theory)
+    /*if (this.valid_URL(this.state.theory)) {*/
+      console.log("Inside valid URL")
+      let newPageUrl = "https://www.youtube.com/watch?v=BrQKM_uaZKE"
+      window.open(newPageUrl, "_blank")
+    /*} else {
+      console.log("Inside else")
+      let newWindow = window.open();
+      newWindow.document.write(this.state.theory)
+    }*/
+
+    
+
+const blobUrl = create_blob_url(this.state.theory.file, this.state.theory.type);
+      window.open(blobUrl, "_blank") 
+    
+    
+  }
+
 
 
   render() {
+  
     return (
       <div className="App">
         <ProgressBar
@@ -78,7 +110,7 @@ class App extends Component {
               <Col sm={2}>
                 <ButtonGroup vertical>
                   <Button onClick={this.handleNext} variant="primary">NEEEEXT</Button>
-                  <Button onClick={this.handleNext} variant="info" >THEORY</Button>
+                  <Button onClick={this.handleTheory} variant="info" >THEORY</Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -97,6 +129,39 @@ class App extends Component {
     );
 
   }
+}
+
+
+function convert_to_base64(img_data, type) {
+  console.log(img_data)
+  let img = Buffer.from(img_data, 'binary').toString('base64')
+  return `data:${type};base64,${img}`;
+}
+
+
+
+function create_blob_url(img_data, contentType) {
+  const base64ImageData = convert_to_base64(img_data, contentType);
+
+const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
+const byteArrays = [];
+
+for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+    const slice = byteCharacters.slice(offset, offset + 1024);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+
+    byteArrays.push(byteArray);
+}
+const blob = new Blob(byteArrays, {type: contentType});
+const blobUrl = URL.createObjectURL(blob);
+
+return blobUrl;
 }
 
 export default App;
