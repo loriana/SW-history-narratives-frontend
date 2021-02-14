@@ -13,7 +13,6 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 
-import ProgressBar from "@ramonak/react-progress-bar";
 
 import axios from 'axios';
 
@@ -23,9 +22,11 @@ import axios from 'axios';
 class App extends Component {
   state = {
     next_sha: null,
+    current_sha: null,
+    prev_sha: null,
     message: null,
     files: [], 
-    theory: null
+    theory: []
   }
 
 
@@ -39,7 +40,15 @@ class App extends Component {
         console.log("IN COMPONENT DID MOUNT")
         console.log(response.data)
         this.setState({
+          /*
           next_sha: response.data.next_sha,
+          message: response.data.message,
+          files: parseDiff(response.data.files), 
+          theory: response.data.theory
+          */
+          next_sha: response.data.next_sha,
+          current_sha: response.data.current_sha,
+          prev_sha: null,
           message: response.data.message,
           files: parseDiff(response.data.files), 
           theory: response.data.theory
@@ -48,46 +57,50 @@ class App extends Component {
       .catch(error => {
         console.log(error)
       })
+      console.log(this.state)
   }
 
   handleNext = () => {
     console.log("Call me! Call me any, any time")
+    console.log("before api call")
+    console.log(this.state)
     axios.get(`http://localhost:3030/commits/${this.state.next_sha}`)
       .then(response => {
-        console.log(response)
+       // console.log(response)
         this.setState({
           next_sha: response.data.next_sha,
+          current_sha: response.data.current_sha,
+          prev_sha: this.state.current_sha,
           message: response.data.message,
           files: parseDiff(response.data.files), 
           theory: response.data.theory
+          /*next_sha: response.data.next_sha,
+          message: response.data.message,
+          files: parseDiff(response.data.files), 
+          theory: response.data.theory*/
         })
       })
       .catch(error => {
         console.log(error)
       })
+
+      console.log("after api call")
+      console.log(this.state)
   }
 
-  
 
-  //check whether theory ressource is a url or a document and render accordingly
   handleTheory = () => {
-    console.log("Handle theory called")
-    console.log(this.state.theory)
-    /*if (this.valid_URL(this.state.theory)) {*/
-      console.log("Inside valid URL")
-      let newPageUrl = "https://www.youtube.com/watch?v=BrQKM_uaZKE"
-      window.open(newPageUrl, "_blank")
-    /*} else {
-      console.log("Inside else")
-      let newWindow = window.open();
-      newWindow.document.write(this.state.theory)
-    }*/
 
-    
+    axios.get(`http://localhost:3030/commits/theory/${this.state.current_sha}`)
+      .then(response => {
+        console.log(response)
+        
+        display_theory(response.data)
 
-const blobUrl = create_blob_url(this.state.theory.file, this.state.theory.type);
-      window.open(blobUrl, "_blank") 
-    
+      })
+      .catch(error => {
+        console.log(error)
+      })
     
   }
 
@@ -97,12 +110,6 @@ const blobUrl = create_blob_url(this.state.theory.file, this.state.theory.type);
   
     return (
       <div className="App">
-        <ProgressBar
-          completed={60}
-          bgcolor="#6a1b9a"
-          baseBgColor="#e0e0de"
-          margin="10px"
-        />
         <Jumbotron>
           <Container>
             <Row>
@@ -110,6 +117,7 @@ const blobUrl = create_blob_url(this.state.theory.file, this.state.theory.type);
               <Col sm={2}>
                 <ButtonGroup vertical>
                   <Button onClick={this.handleNext} variant="primary">NEEEEXT</Button>
+                  <Button onClick={console.log(`GOING TO: ${this.state.prev_sha}`)} variant="danger">PREVIOUS</Button>
                   <Button onClick={this.handleTheory} variant="info" >THEORY</Button>
                 </ButtonGroup>
               </Col>
@@ -162,6 +170,23 @@ const blob = new Blob(byteArrays, {type: contentType});
 const blobUrl = URL.createObjectURL(blob);
 
 return blobUrl;
+}
+
+
+function display_theory(theory_array) {
+  console.log("THEORY ARRAY")
+  console.log(theory_array)
+
+  for (let theory_piece of theory_array) {
+    if (theory_piece.type.startsWith("URL")) {
+      window.open(theory_piece.file, "_blank")
+
+    } else if (theory_piece.type.startsWith("text/") || theory_piece.type.startsWith("image/")) {
+      const blobUrl = create_blob_url(theory_piece.file, theory_piece.type);
+      window.open(blobUrl, "_blank")
+    }
+  }
+
 }
 
 export default App;
