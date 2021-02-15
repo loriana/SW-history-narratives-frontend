@@ -48,7 +48,7 @@ class Tabset extends Component {
 
     return (
 
-      <Tabs key={files.length} defaultActiveKey={this.get_active_tab(files)}>
+      <Tabs defaultActiveKey={this.get_active_tab(files)}>
         {
           files.map(file =>
             <Tab key={file.newPath} eventKey={file.newPath} title={file.newPath}>

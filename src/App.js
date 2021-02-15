@@ -129,7 +129,7 @@ class App extends Component {
 
         {
           this.state.files.length > 0 ?
-            <Tabset files={this.state.files}></Tabset>
+            <Tabset key={this.state.current_sha} files={this.state.files}></Tabset>
             :
             <p>Loading ...</p>
         }
