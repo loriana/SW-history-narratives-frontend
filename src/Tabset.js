@@ -37,29 +37,37 @@ class Tabset extends Component {
     return options
   }
 
-  get_active_tab(files) {
 
+  filter_files(files) {
+    let filtered_files = []
     for (let file of files) {
       let check = is_supported_extension(file.hunks, this.customize_options(file))
       if (check.supported) {
-        return file.newPath;
+        filtered_files.push({
+          file: file,
+          check: check
+        })
       }
     }
-
-    return files[0].newPath;
+    return filtered_files
   }
 
 
   render() {
     let { files } = this.props
+    let filtered_files = this.filter_files(files)
 
     return (
 
-      <Tabs defaultActiveKey={this.get_active_tab(files)}>
+      <Tabs defaultActiveKey={filtered_files[0].file.newPath}>
         {
-          files.map(file => {
-            let check = is_supported_extension(file.hunks, this.customize_options(file))
+          filtered_files.map(item => {
+
+            let file = item.file
+            let check = item.check
+
             if (check.supported) {
+
               return (
                 <Tab key={file.newPath} eventKey={file.newPath} title={file.newPath}>
               <div key={file.newPath} className="tab-item-wrapper">
@@ -70,6 +78,7 @@ class Tabset extends Component {
                   tokens={check.tokens}></Diff>
               </div>
             </Tab>
+
               );
             }
             return null;
@@ -89,7 +98,7 @@ function is_supported_extension(hunks, options) {
   } catch (error) {
     supported = false;
     tokens = null;
-    //console.log(error);
+    console.log(error);
   }
   return {
     supported: supported,
