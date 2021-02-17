@@ -18,6 +18,7 @@ import axios from 'axios';
 
 //add pretty progress bar: https://reactjsexample.com/a-library-to-create-stunning-progress-bars-and-steps-in-react/
 //or this one with a label: https://www.npmjs.com/package/@ramonak/react-progress-bar
+//also check out this one: https://bit.dev/nexxtway/react-rainbow/progress-step
 
 class App extends Component {
   state = {
@@ -31,7 +32,6 @@ class App extends Component {
 
 
   //is there a theory resource?
-  //  if yes, is it a url? --> check if url valid --> if not valid grey out theory button
   //  if no theory resource, grey out the theory button
   componentDidMount() {
 

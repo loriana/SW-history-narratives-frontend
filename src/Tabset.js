@@ -38,8 +38,15 @@ class Tabset extends Component {
   }
 
   get_active_tab(files) {
-    console.log(`ACTIVE PATH: ${files[0].newPath}`)
-    return files[0].newPath
+
+    for (let file of files) {
+      let check = is_supported_extension(file.hunks, this.customize_options(file))
+      if (check.supported) {
+        return file.newPath;
+      }
+    }
+
+    return files[0].newPath;
   }
 
 
@@ -50,20 +57,46 @@ class Tabset extends Component {
 
       <Tabs defaultActiveKey={this.get_active_tab(files)}>
         {
-          files.map(file =>
-            <Tab key={file.newPath} eventKey={file.newPath} title={file.newPath}>
+          files.map(file => {
+            let check = is_supported_extension(file.hunks, this.customize_options(file))
+            if (check.supported) {
+              return (
+                <Tab key={file.newPath} eventKey={file.newPath} title={file.newPath}>
               <div key={file.newPath} className="tab-item-wrapper">
                 <Diff
                   key={file.oldRevision + '-' + file.newRevision}
                   viewType="unified" diffType={file.type}
                   hunks={file.hunks}
-                  tokens={tokenize(file.hunks, this.customize_options(file))}></Diff>
+                  tokens={check.tokens}></Diff>
               </div>
-            </Tab>)
+            </Tab>
+              );
+            }
+            return null;
+          })
         }
       </Tabs>
     );
   }
 }
 
+
+function is_supported_extension(hunks, options) {
+  let supported = true;
+  let tokens;
+  try {
+    tokens = tokenize(hunks, options)
+  } catch (error) {
+    supported = false;
+    tokens = null;
+    //console.log(error);
+  }
+  return {
+    supported: supported,
+    tokens: tokens,
+  };
+}
+
 export default Tabset;
+
+
