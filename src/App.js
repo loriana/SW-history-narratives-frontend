@@ -62,8 +62,7 @@ class App extends Component {
 
   handleNext = () => {
     console.log("Call me! Call me any, any time")
-    console.log("before api call")
-    console.log(this.state)
+    console.log(`Requesting sha: ${this.state.next_sha}`)
     axios.get(`http://localhost:3030/commits/${this.state.next_sha}`)
       .then(response => {
        // console.log(response)
@@ -129,7 +128,7 @@ class App extends Component {
 
         {
           this.state.files.length > 0 ?
-            <Tabset key={this.state.current_sha} files={this.state.files}></Tabset>
+            <Tabset key={this.state.current_sha} files={remove_theory(this.state.theory, this.state.files)}></Tabset>
             :
             <p>Loading ...</p>
         }
@@ -141,7 +140,6 @@ class App extends Component {
 
 
 function convert_to_base64(img_data, type) {
-  console.log(img_data)
   let img = Buffer.from(img_data, 'binary').toString('base64')
   return `data:${type};base64,${img}`;
 }
@@ -187,6 +185,36 @@ function display_theory(theory_array) {
     }
   }
 
+}
+
+function remove_theory(theory_array, files) {
+
+  let filtered_files = []
+  for (let file of files) {
+    if (!is_theory(file, theory_array)) {
+      filtered_files.push(file)
+    }
+  }
+
+  return filtered_files
+}
+
+
+/**
+ * Returns true if:
+ * the given file *doesn't* have a newPath prop (since binaries like images don't),
+ * OR it is part of the array of theory paths,
+ * OR if it is a file commited as part of an arc commit
+ * @param {*} file 
+ * @param {*} theory_array 
+ */
+function is_theory(file, theory_array) {
+  if (file.newPath === null || file.newPath === undefined) {
+    return true
+  }
+
+  return theory_array.includes(file.newPath) ||
+    file.newPath.toLowerCase().startsWith("arc")
 }
 
 export default App;
