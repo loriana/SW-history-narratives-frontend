@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Tabset from './Tabset';
+import ArcComponent from './ArcComponent';
 
 import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
@@ -22,6 +23,7 @@ import axios from 'axios';
 
 class App extends Component {
   state = {
+    type: null,
     next_sha: null,
     current_sha: null,
     prev_sha: null,
@@ -40,17 +42,12 @@ class App extends Component {
         console.log("IN COMPONENT DID MOUNT")
         console.log(response.data)
         this.setState({
-          /*
-          next_sha: response.data.next_sha,
-          message: response.data.message,
-          files: parseDiff(response.data.files), 
-          theory: response.data.theory
-          */
+          type:  response.data.type,
           next_sha: response.data.next_sha,
           current_sha: response.data.current_sha,
           prev_sha: null,
           message: response.data.message,
-          files: parseDiff(response.data.files), 
+          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
           theory: response.data.theory
         })
       })
@@ -67,16 +64,13 @@ class App extends Component {
       .then(response => {
        // console.log(response)
         this.setState({
+          type: response.data.type,
           next_sha: response.data.next_sha,
           current_sha: response.data.current_sha,
           prev_sha: this.state.current_sha,
           message: response.data.message,
-          files: parseDiff(response.data.files), 
+          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
           theory: response.data.theory
-          /*next_sha: response.data.next_sha,
-          message: response.data.message,
-          files: parseDiff(response.data.files), 
-          theory: response.data.theory*/
         })
       })
       .catch(error => {
@@ -107,6 +101,16 @@ class App extends Component {
 
   render() {
   
+    if (this.state.type === "arc") {
+
+      return (
+        <div className="App">
+          <ArcComponent title={this.state.message} description={this.state.files} next={this.handleNext}></ArcComponent>
+        </div>
+      )
+    }
+
+
     return (
       <div className="App">
         <Jumbotron>
@@ -134,6 +138,10 @@ class App extends Component {
         }
       </div>
     );
+
+      
+
+
 
   }
 }
