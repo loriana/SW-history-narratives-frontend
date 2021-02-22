@@ -24,6 +24,7 @@ import axios from 'axios';
 
 class App extends Component {
   state = {
+    first_sha: null,
     type: null,
     next_sha: null,
     current_sha: null,
@@ -34,71 +35,6 @@ class App extends Component {
   }
 
 
-  //is there a theory resource?
-  //  if no theory resource, grey out the theory button
-  componentDidMount() {
-
-    axios.get('http://localhost:3030/commits')
-      .then(response => {
-        console.log("IN COMPONENT DID MOUNT")
-        console.log(response.data)
-        this.setState({
-          type:  response.data.type,
-          next_sha: response.data.next_sha,
-          current_sha: response.data.current_sha,
-          prev_sha: null,
-          message: response.data.message,
-          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
-          theory: response.data.theory
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-      console.log(this.state)
-  }
-
-  handleNext = () => {
-    console.log("Call me! Call me any, any time")
-    console.log(`Requesting sha: ${this.state.next_sha}`)
-    axios.get(`http://localhost:3030/commits/${this.state.next_sha}`)
-      .then(response => {
-       // console.log(response)
-        this.setState({
-          type: response.data.type,
-          next_sha: response.data.next_sha,
-          current_sha: response.data.current_sha,
-          prev_sha: this.state.current_sha,
-          message: response.data.message,
-          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
-          theory: response.data.theory
-        })
-      })
-      .catch(error => {
-        console.log(error)
-      })
-
-      console.log("after api call")
-      console.log(this.state)
-  }
-
-
-  handleTheory = () => {
-
-    axios.get(`http://localhost:3030/commits/theory/${this.state.current_sha}`)
-      .then(response => {
-        console.log(response)
-        
-        display_theory(response.data)
-
-      })
-      .catch(error => {
-        console.log(error)
-      })
-    
-  }
-
-
 
   render() {
   
@@ -106,7 +42,13 @@ class App extends Component {
 
       return (
         <div className="App">
-          <ArcComponent title={this.state.message} description={this.state.files} next={this.handleNext}></ArcComponent>
+          <ArcComponent 
+          title={this.state.message} 
+          description={this.state.files} 
+          next={this.handleNext} previous={this.handleBack}
+          disableNext={this.state.next_sha === this.state.current_sha}
+          disablePrevious={this.state.prev_sha === null}
+          ></ArcComponent>
         </div>
       )
     }
@@ -121,9 +63,9 @@ class App extends Component {
               <Col sm={9}><TextDisplay text={this.state.message}></TextDisplay></Col>
               <Col sm={2}>
                 <ButtonGroup vertical>
-                  <Button onClick={this.handleNext} variant="primary">NEEEEXT</Button>
-                  <Button onClick={console.log(`GOING TO: ${this.state.prev_sha}`)} variant="danger">PREVIOUS</Button>
-                  <Button onClick={this.handleTheory} variant="info" >THEORY</Button>
+                  <Button onClick={this.handleNext} variant="primary" disabled={this.state.next_sha === this.state.current_sha}>NEEEEXT</Button>
+                  <Button onClick={this.handleBack} variant="danger" disabled={this.state.prev_sha === null}>PREVIOUS</Button>
+                  <Button onClick={this.handleTheory} variant="info" disabled={this.state.theory.length === 0}>THEORY</Button>
                 </ButtonGroup>
               </Col>
             </Row>
@@ -141,12 +83,110 @@ class App extends Component {
       </div>
     );
 
-      
-
-
-
   }
+
+
+
+
+
+  //is there a theory resource?
+  //  if no theory resource, grey out the theory button
+  componentDidMount() {
+
+    this.get_first_commit_data()
+    
+  }
+
+  handleNext = () => {
+    console.log("HANDLE NEXT")
+    console.log(`Requesting sha: ${this.state.next_sha}`)
+    console.log(`Current sha: ${this.state.current_sha}`)
+    
+    this.get_commit_data(this.state.next_sha)
+  }
+
+  handleBack = () => {
+    console.log("Handle prev")
+    console.log(`Requesting sha: ${this.state.prev_sha}`)
+    if (this.state.prev_sha === this.state.first_sha) {
+
+      this.get_first_commit_data()
+
+    } else {
+     
+      this.get_commit_data(this.state.prev_sha)
+    }
+    
+
+      console.log("after api call")
+      console.log(this.state)
+  }
+
+  handleTheory = () => {
+
+    axios.get(`http://localhost:3030/commits/theory/${this.state.current_sha}`)
+      .then(response => {
+        console.log(response)
+        
+        display_theory(response.data)
+
+      })
+      .catch(error => {
+        console.log(error)
+      })
+    
+  }
+
+  get_commit_data(sha) {
+    axios.get(`http://localhost:3030/commits/${sha}`)
+      .then(response => {
+       // console.log(response)
+        this.setState({
+          first_sha: this.state.first_sha,
+          type: response.data.type,
+          next_sha: response.data.next_sha,
+          current_sha: response.data.current_sha,
+          prev_sha: this.state.current_sha,
+          message: response.data.message,
+          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
+          theory: response.data.theory
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
+  get_first_commit_data() {
+    axios.get('http://localhost:3030/commits')
+      .then(response => {
+        console.log("IN COMPONENT DID MOUNT")
+        console.log(response.data)
+        this.setState({
+          first_sha: response.data.current_sha,
+          type:  response.data.type,
+          next_sha: response.data.next_sha,
+          current_sha: response.data.current_sha,
+          prev_sha: null,
+          message: response.data.message,
+          files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
+          theory: response.data.theory
+        })
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }
+
 }
+
+
+
+
+
+
+
+
 
 
 function convert_to_base64(img_data, type) {
@@ -228,18 +268,5 @@ function is_theory(file, theory_array) {
 }
 
 
-
-/**
- * parse commit or arc desc test
- * for every newline character, insert a break
- * if sth has ` ` around it, then change font to Courier New *and* change background to sth like light blue
- */
-/*function parse(text) {
-  console.log(`text: ${text}`)
-  let parsed_text = text.replace("\n", "<br>")
-  return (<p>
-    {parsed_text}
-  </p>)
-}*/
 
 export default App;

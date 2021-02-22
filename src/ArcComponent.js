@@ -11,10 +11,12 @@ class ArcComponent extends Component {
             <div>
                 <h2>{this.props.title}</h2>
                 <TextDisplay text={this.props.description}></TextDisplay>
-                <Button onClick={this.props.next}>GO</Button>
+                <Button onClick={this.props.previous} disabled={this.props.disablePrevious}>Back</Button>
+                <Button onClick={this.props.next} disabled={this.props.disableNext}>GO</Button>
             </div>
          );
     }
 }
+
  
 export default ArcComponent;
