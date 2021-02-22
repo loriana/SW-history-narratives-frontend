@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Tabset from './Tabset';
 import ArcComponent from './ArcComponent';
+import TextDisplay from './TextDisplay';
 
 import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
@@ -111,12 +112,13 @@ class App extends Component {
     }
 
 
+//<TextDisplay text={this.state.message}></TextDisplay>
     return (
       <div className="App">
         <Jumbotron>
           <Container>
             <Row>
-              <Col sm={9}><p>{this.state.message}</p></Col>
+              <Col sm={9}><TextDisplay text={this.state.message}></TextDisplay></Col>
               <Col sm={2}>
                 <ButtonGroup vertical>
                   <Button onClick={this.handleNext} variant="primary">NEEEEXT</Button>
@@ -224,5 +226,20 @@ function is_theory(file, theory_array) {
   return theory_array.includes(file.newPath) ||
     file.newPath.toLowerCase().startsWith("arc")
 }
+
+
+
+/**
+ * parse commit or arc desc test
+ * for every newline character, insert a break
+ * if sth has ` ` around it, then change font to Courier New *and* change background to sth like light blue
+ */
+/*function parse(text) {
+  console.log(`text: ${text}`)
+  let parsed_text = text.replace("\n", "<br>")
+  return (<p>
+    {parsed_text}
+  </p>)
+}*/
 
 export default App;
