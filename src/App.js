@@ -2,18 +2,12 @@ import React, { Component } from 'react';
 import './App.css';
 import Tabset from './Tabset';
 import ArcComponent from './ArcComponent';
-import TextDisplay from './TextDisplay';
+import MessageComponent from './MessageComponent';
 
 import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 
-import Jumbotron from 'react-bootstrap/Jumbotron'
 
-import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Button from 'react-bootstrap/Button'
-import Container from 'react-bootstrap/Container'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 
 
 import axios from 'axios';
@@ -51,29 +45,18 @@ class App extends Component {
           ></ArcComponent>
         </div>
       )
+
     }
 
 
-//<TextDisplay text={this.state.message}></TextDisplay>
     return (
       <div className="App">
-        <Jumbotron>
-          <Container>
-            <Row>
-              <Col sm={9}><TextDisplay text={this.state.message}></TextDisplay></Col>
-              <Col sm={2}>
-                <ButtonGroup vertical>
-                  <Button onClick={this.handleNext} variant="primary" disabled={this.state.next_sha === this.state.current_sha}>NEEEEXT</Button>
-                  <Button onClick={this.handleBack} variant="danger" disabled={this.state.prev_sha === null}>PREVIOUS</Button>
-                  <Button onClick={this.handleTheory} variant="info" disabled={this.state.theory.length === 0}>THEORY</Button>
-                </ButtonGroup>
-              </Col>
-            </Row>
-
-          </Container>
-
-        </Jumbotron>
-
+        <MessageComponent
+        message={this.state.message}
+        next={this.handleNext} disableNext={this.state.next_sha === this.state.current_sha}
+        previous={this.handleBack} disablePrevious={this.state.prev_sha === null}
+        theory={this.handleTheory} disableTheory={this.state.theory.length === 0}>
+        </MessageComponent>
         {
           this.state.files.length > 0 ?
             <Tabset key={this.state.current_sha} files={remove_theory(this.state.theory, this.state.files)}></Tabset>
