@@ -5,7 +5,7 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import './arcComponent.css';
+import './style/arcComponent.css';
 
 
 /**  style={{backgroundColor: "#4CAF50", color: "red", borderColor: "#4CAF50"}}*/
