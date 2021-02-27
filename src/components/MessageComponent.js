@@ -10,6 +10,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
+
+/**
+ * Displays a commit message, as well as the curent arc's title and a set of navigation buttons.
+ * The navigation buttons include Back, Next, and an optional Theory.
+ */
+
 class MessageComponent extends Component {
 
     render() { 

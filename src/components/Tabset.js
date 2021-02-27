@@ -7,7 +7,11 @@ import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 import refractor from 'refractor';
 
-
+/**
+ * Creates and displays a set of tabs based on files associated with a commit.
+ * Each tab shows a unified diff view of a file.
+ * The tab name is the file's path in the repository.
+ */
 
 class Tabset extends Component {
 
@@ -25,6 +29,11 @@ class Tabset extends Component {
     }
   };
 
+  /**
+   * Customizes displaying options based on coding language.
+   * Uses the file's extension to determine the coding language.
+   * @param {*} file 
+   */
   customize_options(file) {
     let file_path = file.newPath.split('.')
     let extension = file_path[file_path.length - 1]
@@ -37,7 +46,11 @@ class Tabset extends Component {
     return options
   }
 
-
+/**
+ * Filters the array of files belonging to a commit, so that only files that can be displayed as a diff remain.
+ * Basically, those are code or text files.
+ * @param {*} files 
+ */
   filter_files(files) {
     let filtered_files = []
     for (let file of files) {
@@ -90,15 +103,27 @@ class Tabset extends Component {
 }
 
 
+/**
+ * Checks if the commited files has a supported extension that allows for it to be displayed in a diff tab.
+ * If the file is not a code file but for example an image file,
+ * calling tokenize() will give an error, which will then be caught.
+ * The file is then ignored.
+ * @param {*} hunks 
+ * @param {*} options 
+ */
 function is_supported_extension(hunks, options) {
   let supported = true;
   let tokens;
   try {
     tokens = tokenize(hunks, options)
-  } catch (error) {
+  } catch (error) { //read explanation below
+    //this error is could happen without anything wrong going on
+    //the code automatically parses commited files presuming they are code files
+    //if a commit has a file that is not code (like an image), then this error happens and is caught
+    //and the file isn't displayed in a diff tab
     supported = false;
     tokens = null;
-    console.log(error);
+    //console.log(error); 
   }
   return {
     supported: supported,

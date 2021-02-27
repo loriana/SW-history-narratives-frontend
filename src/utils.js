@@ -1,17 +1,16 @@
-
-
-
-
-
-function convert_to_base64(img_data, type) {
-    let img = Buffer.from(img_data, 'binary').toString('base64')
-    return `data:${type};base64,${img}`;
-  }
+function convert_to_base64(file_data, type) {
+    let file = Buffer.from(file_data, 'binary').toString('base64')
+    return `data:${type};base64,${file}`;
+}
   
   
-  
-  function create_blob_url(img_data, contentType) {
-    const base64ImageData = convert_to_base64(img_data, contentType);
+/**
+ * Creates a blob URL for the given file, depending on its content type.
+ * @param {*} file_data 
+ * @param {*} contentType 
+ */
+function create_blob_url(file_data, contentType) {
+    const base64ImageData = convert_to_base64(file_data, contentType);
   
     const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
     const byteArrays = [];
@@ -32,11 +31,14 @@ function convert_to_base64(img_data, type) {
     const blobUrl = URL.createObjectURL(blob);
   
     return blobUrl;
-  }
+}
+
   
-  
-  function display_theory(theory_array) {
-    console.log("THEORY ARRAY")
+/**
+ * Opens each theory resource in a new tab.
+ * @param {*} theory_array 
+ */  
+function display_theory(theory_array) {
     console.log(theory_array)
   
     for (let theory_piece of theory_array) {
@@ -49,9 +51,9 @@ function convert_to_base64(img_data, type) {
       }
     }
   
-  }
+}
   
-  function remove_theory(theory_array, files) {
+function remove_theory(theory_array, files) {
   
     let filtered_files = []
     for (let file of files) {
@@ -61,25 +63,25 @@ function convert_to_base64(img_data, type) {
     }
   
     return filtered_files
-  }
+}
   
   
-  /**
-   * Returns true if:
-   * the given file *doesn't* have a newPath prop (since binaries like images don't),
-   * OR it is part of the array of theory paths,
-   * OR if it is a file commited as part of an arc commit
-   * @param {*} file 
-   * @param {*} theory_array 
-   */
-  function is_theory(file, theory_array) {
+/**
+* Returns true if:
+* the given file *doesn't* have a newPath prop (since binaries like images don't),
+* OR it is part of the array of theory paths,
+* OR if it is a file commited as part of an arc commit
+* @param {*} file 
+* @param {*} theory_array 
+*/
+function is_theory(file, theory_array) {
     if (file.newPath === null || file.newPath === undefined) {
       return true
     }
   
     return theory_array.includes(file.newPath) ||
       file.newPath.toLowerCase().startsWith("arc")
-  }
+}
   
 
-  module.exports={display_theory, remove_theory}
+module.exports={display_theory, remove_theory}

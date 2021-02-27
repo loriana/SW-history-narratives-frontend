@@ -7,8 +7,10 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import '../style/arcComponent.css';
 
-
-/**  style={{backgroundColor: "#4CAF50", color: "red", borderColor: "#4CAF50"}}*/
+/**
+ * Displays the Arc view, that contains the title of a new arc, 
+ * a description, and a set of navigation buttons.
+ */
 
 class ArcComponent extends Component {
     state = {  }

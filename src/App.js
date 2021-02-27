@@ -81,7 +81,7 @@ class App extends Component {
 
   handleBack = () => {
     
-    if (this.state.prev_sha === this.state.first_sha) {
+    if (this.state.prev_sha === this.state.first_sha) { //this means that the previous commit is the first commit
       this.get_first_commit_data()
     } else {
       this.get_commit_data(this.state.prev_sha)
@@ -89,6 +89,9 @@ class App extends Component {
 
   }
 
+  /**
+   * Requests and displays the theory resources associated with a commit.
+   */
   handleTheory = () => {
 
     axios.get(`http://localhost:3030/commits/theory/${this.state.current_sha}`)
