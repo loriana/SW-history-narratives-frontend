@@ -21,7 +21,7 @@ class Tabset extends Component {
         console.log(token);
         return (
           <span key={i} className="space">
-            {token.children && token.children.map((token, i) => renderToken(token, defaultRender, i))}
+            {token.children && token.children.map((token, i) => this.renderToken(token, defaultRender, i))}
           </span>
         );
       default:
