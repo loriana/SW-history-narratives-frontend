@@ -13,38 +13,38 @@ import '../style/arcComponent.css';
  */
 
 class ArcComponent extends Component {
-    state = {  }
-    render() { 
-        return ( 
+
+    render() {
+        return (
             <div className="main-container">
                 <Container>
                     <Row>
                         <h2 className="title">
                             <span className="html-tags">&lt; </span>
-                            { this.props.title.replace("#arc#","").trim() }
+                            {this.props.title.replace("#arc#", "").trim()}
                             <span className="html-tags"> /&gt;</span></h2>
                     </Row>
-                    
+
                     <Row>
                         <Col sm={9}><TextDisplay text={this.props.description}></TextDisplay></Col>
                         <Col sm={2}>
-                        <ButtonGroup vertical>
-                    <Button onClick={this.props.next} disabled={this.props.disableNext} 
-                    variant="primary" size="lg">
-                        Start
+                            <ButtonGroup vertical>
+                                <Button onClick={this.props.next} disabled={this.props.disableNext}
+                                    variant="primary" size="lg">
+                                    Start
                     </Button>
-                    <Button onClick={this.props.previous} disabled={this.props.disablePrevious} 
-                    variant="outline-primary" size="lg">
-                        Back
+                                <Button onClick={this.props.previous} disabled={this.props.disablePrevious}
+                                    variant="outline-primary" size="lg">
+                                    Back
                     </Button>
-                </ButtonGroup>
+                            </ButtonGroup>
                         </Col>
                     </Row>
                 </Container>
             </div>
-         );
+        );
     }
 }
 
- 
+
 export default ArcComponent;

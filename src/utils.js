@@ -39,7 +39,6 @@ function create_blob_url(file_data, contentType) {
  * @param {*} theory_array 
  */  
 function display_theory(theory_array) {
-    console.log(theory_array)
   
     for (let theory_piece of theory_array) {
       if (theory_piece.type.startsWith("URL")) {

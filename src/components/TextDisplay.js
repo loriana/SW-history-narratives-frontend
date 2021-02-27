@@ -13,31 +13,31 @@ class TextDisplay extends Component {
    * converting newline characters into <br/> elements.
    * @param {*} text 
    */
-    parse(text) {
-        console.log(`text: ${text}`)
-        let text_lines = text.split("\n")
-        
-        return (<p>
-          {
-          text_lines.map(line => {
-            return (
-              <span key={nextId()}>{line}<br key={nextId()}/></span>
-            )
-          }
-        )
-        }
-        </p>)
-    }
-    
-    
+  parse(text) {
 
-    render() { 
-        return ( 
-        <div>
-            {this.props.text !== null? this.parse(this.props.text) : ""}
-        </div>
-         );
-    }
+    let text_lines = text.split("\n")
+
+    return (<p>
+      {
+        text_lines.map(line => {
+          return (
+            <span key={nextId()}>{line}<br key={nextId()} /></span>
+          )
+        }
+        )
+      }
+    </p>)
+  }
+
+
+
+  render() {
+    return (
+      <div>
+        {this.props.text !== null ? this.parse(this.props.text) : ""}
+      </div>
+    );
+  }
 }
- 
+
 export default TextDisplay;

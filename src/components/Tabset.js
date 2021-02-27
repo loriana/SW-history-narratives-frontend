@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
+import { Diff, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 import refractor from 'refractor';
 
@@ -46,11 +46,11 @@ class Tabset extends Component {
     return options
   }
 
-/**
- * Filters the array of files belonging to a commit, so that only files that can be displayed as a diff remain.
- * Basically, those are code or text files.
- * @param {*} files 
- */
+  /**
+   * Filters the array of files belonging to a commit, so that only files that can be displayed as a diff remain.
+   * Basically, those are code or text files.
+   * @param {*} files 
+   */
   filter_files(files) {
     let filtered_files = []
     for (let file of files) {
@@ -83,14 +83,14 @@ class Tabset extends Component {
 
               return (
                 <Tab key={file.newPath} eventKey={file.newPath} title={file.newPath}>
-              <div key={file.newPath} className="tab-item-wrapper">
-                <Diff
-                  key={file.oldRevision + '-' + file.newRevision}
-                  viewType="unified" diffType={file.type}
-                  hunks={file.hunks}
-                  tokens={check.tokens}></Diff>
-              </div>
-            </Tab>
+                  <div key={file.newPath} className="tab-item-wrapper">
+                    <Diff
+                      key={file.oldRevision + '-' + file.newRevision}
+                      viewType="unified" diffType={file.type}
+                      hunks={file.hunks}
+                      tokens={check.tokens}></Diff>
+                  </div>
+                </Tab>
 
               );
             }

@@ -7,7 +7,7 @@ import { parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 
 import './App.css';
-import {display_theory, remove_theory} from './utils.js';
+import { display_theory, remove_theory } from './utils.js';
 
 import axios from 'axios';
 
@@ -80,7 +80,7 @@ class App extends Component {
 
 
   handleBack = () => {
-    
+
     if (this.state.prev_sha === this.state.first_sha) { //this means that the previous commit is the first commit
       this.get_first_commit_data()
     } else {
