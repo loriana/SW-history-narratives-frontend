@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import Tabset from './Tabset';
-import ArcComponent from './ArcComponent';
-import MessageComponent from './MessageComponent';
+import Tabset from './components/Tabset';
+import ArcComponent from './components/ArcComponent';
+import MessageComponent from './components/MessageComponent';
 
 import { parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
