@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import nextId from "react-id-generator";
 
+
 class TextDisplay extends Component {
 
     parse(text) {
@@ -23,7 +24,9 @@ class TextDisplay extends Component {
 
     render() { 
         return ( 
-        <div>{this.props.text !== null? this.parse(this.props.text) : ""}</div>
+        <div>
+            {this.props.text !== null? this.parse(this.props.text) : ""}
+        </div>
          );
     }
 }

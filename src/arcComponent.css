@@ -1,0 +1,23 @@
+.main-container { 
+    display: grid;
+    height: 100vh;
+    margin: 0;
+    place-items: center center;
+    font-family: "Lucida Console", "Courier New", monospace;
+    background-color: whitesmoke;
+}
+
+.html-tags {
+    color: #0275d8
+   
+}
+
+.title {
+    color: #5bc0de;
+}
+
+
+
+
+
+

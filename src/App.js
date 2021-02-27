@@ -4,10 +4,10 @@ import Tabset from './Tabset';
 import ArcComponent from './ArcComponent';
 import MessageComponent from './MessageComponent';
 
+
+
 import { parseDiff, Diff, Hunk, tokenize } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
-
-
 
 
 import axios from 'axios';
@@ -17,6 +17,7 @@ import axios from 'axios';
 //also check out this one: https://bit.dev/nexxtway/react-rainbow/progress-step
 
 class App extends Component {
+
   state = {
     first_sha: null,
     type: null,
@@ -24,8 +25,9 @@ class App extends Component {
     current_sha: null,
     prev_sha: null,
     message: null,
+    current_arc: null,
     files: [], 
-    theory: []
+    theory: [],
   }
 
 
@@ -48,10 +50,12 @@ class App extends Component {
 
     }
 
-
+//<OnClickProgressIndicator></OnClickProgressIndicator>
+//<ArcDropdown></ArcDropdown>
     return (
       <div className="App">
         <MessageComponent
+        arc = {this.state.current_arc}
         message={this.state.message}
         next={this.handleNext} disableNext={this.state.next_sha === this.state.current_sha}
         previous={this.handleBack} disablePrevious={this.state.prev_sha === null}
@@ -61,7 +65,7 @@ class App extends Component {
           this.state.files.length > 0 ?
             <Tabset key={this.state.current_sha} files={remove_theory(this.state.theory, this.state.files)}></Tabset>
             :
-            <p>Loading ...</p>
+            null
         }
       </div>
     );
@@ -120,6 +124,7 @@ class App extends Component {
     
   }
 
+
   get_commit_data(sha) {
     axios.get(`http://localhost:3030/commits/${sha}`)
       .then(response => {
@@ -131,6 +136,7 @@ class App extends Component {
           current_sha: response.data.current_sha,
           prev_sha: this.state.current_sha,
           message: response.data.message,
+          current_arc: response.data.type === "arc"? response.data.message : this.state.current_arc,
           files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
           theory: response.data.theory
         })
@@ -152,6 +158,7 @@ class App extends Component {
           current_sha: response.data.current_sha,
           prev_sha: null,
           message: response.data.message,
+          current_arc: response.data.type === "arc"? response.data.message : this.state.current_arc,
           files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files, 
           theory: response.data.theory
         })

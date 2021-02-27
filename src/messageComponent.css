@@ -1,0 +1,15 @@
+.message_container {
+    background-color: whitesmoke;
+    padding: 30px;
+    margin: 10px;
+    font-family: "Lucida Console", "Courier New", monospace;
+}
+.html-tags {
+    color: #0275d8
+   
+}
+
+.title {
+    color:  whitesmoke;
+    background-color: #5bc0de;
+}

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import TextDisplay from './TextDisplay';
 
-import Jumbotron from 'react-bootstrap/Jumbotron';
+import './messageComponent.css';
 
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Button from 'react-bootstrap/Button';
@@ -12,30 +12,36 @@ import Col from 'react-bootstrap/Col';
 
 class MessageComponent extends Component {
 
-    /**
-     *         message={this.state.message}
-        next={this.handleNext} disableNext={this.state.next_sha === this.state.current_sha}
-        previous={this.handleBack} disablePrevious={this.state.prev_sha === null}
-        theory={this.handleTheory} disableTheory={this.state.theory.length === 0}>
-     */
     render() { 
         return ( 
-            <Jumbotron>
+            <div className="message_container">
             <Container>
                 <Row>
-                  <Col sm={9}><TextDisplay text={this.props.message}></TextDisplay></Col>
+                  <Col sm={9}>
+                    {
+                      this.props.arc ? 
+                      <Row><h5 className="title">
+                            <span className="html-tags">&lt; </span>
+                            {this.props.arc.replace("#arc#","").trim()}
+                            <span className="html-tags"> /&gt;</span></h5>
+                    </Row>
+                    :
+                    null
+                    }
+                      <Row><TextDisplay text={this.props.message}></TextDisplay></Row></Col>
                   <Col sm={2}>
                     <ButtonGroup vertical>
-                      <Button onClick={this.props.next} variant="primary" disabled={this.props.disableNext}>NEEEEXT</Button>
-                      <Button onClick={this.props.previous} variant="danger" disabled={this.props.disablePrevious}>PREVIOUS</Button>
-                      <Button onClick={this.props.theory} variant="info" disabled={this.props.disableTheory}>THEORY</Button>
+                        <ButtonGroup>
+                            <Button onClick={this.props.previous} variant="outline-primary" disabled={this.props.disablePrevious}>Back</Button>
+                            <Button onClick={this.props.next} variant="primary" disabled={this.props.disableNext}>Next</Button>
+                        </ButtonGroup>
+                      <Button onClick={this.props.theory} variant="info" disabled={this.props.disableTheory}>Theory</Button>
                     </ButtonGroup>
                   </Col>
                 </Row>
     
               </Container>
-    
-            </Jumbotron>
+            </div>
          );
     }
 }
