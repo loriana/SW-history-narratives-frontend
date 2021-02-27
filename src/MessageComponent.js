@@ -14,7 +14,7 @@ class MessageComponent extends Component {
 
     render() { 
         return ( 
-            <div className="message_container">
+            <div className="message-container">
             <Container>
                 <Row>
                   <Col sm={9}>
@@ -35,7 +35,13 @@ class MessageComponent extends Component {
                             <Button onClick={this.props.previous} variant="outline-primary" disabled={this.props.disablePrevious}>Back</Button>
                             <Button onClick={this.props.next} variant="primary" disabled={this.props.disableNext}>Next</Button>
                         </ButtonGroup>
-                      <Button onClick={this.props.theory} variant="info" disabled={this.props.disableTheory}>Theory</Button>
+                        {
+                          this.props.disableTheory?
+                          null
+                          :
+                          <Button onClick={this.props.theory} variant="info">Theory</Button>
+                        }
+                      
                     </ButtonGroup>
                   </Col>
                 </Row>
