@@ -3,6 +3,8 @@ import Tabset from './components/Tabset';
 import ArcComponent from './components/ArcComponent';
 import MessageComponent from './components/MessageComponent';
 
+import Notifications, {notify} from 'react-notify-toast';
+
 import { parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
 
@@ -34,6 +36,7 @@ class App extends Component {
 
       return (
         <div className="App">
+          <Notifications />
           <ArcComponent
             title={this.state.message}
             description={this.state.files}
@@ -49,6 +52,7 @@ class App extends Component {
 
     return (
       <div className="App">
+        <Notifications />
         <MessageComponent
           arc={this.state.current_arc}
           message={this.state.message}
@@ -100,6 +104,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error)
+        notify.show("You've got an error! Check out the console for details.", "error")
       })
 
   }
@@ -122,6 +127,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error)
+        notify.show("You've got an error! Check out the console for details.", "error")
       })
   }
 
@@ -142,6 +148,7 @@ class App extends Component {
       })
       .catch(error => {
         console.log(error)
+        notify.show("You've got an error! Check out the console for details.", "error")
       })
   }
 
