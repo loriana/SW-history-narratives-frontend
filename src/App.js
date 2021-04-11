@@ -3,7 +3,7 @@ import Tabset from './components/Tabset';
 import ArcComponent from './components/ArcComponent';
 import MessageComponent from './components/MessageComponent';
 
-import Notifications, {notify} from 'react-notify-toast';
+import Notifications, { notify } from 'react-notify-toast';
 
 import { parseDiff } from 'react-diff-view';
 import 'react-diff-view/style/index.css';
@@ -32,6 +32,7 @@ class App extends Component {
 
   render() {
 
+
     if (this.state.type === "arc") {
 
       return (
@@ -47,27 +48,34 @@ class App extends Component {
         </div>
       )
 
+    } else if (this.state.type === "normal") {
+      return (
+        <div className="App">
+          <Notifications />
+          <MessageComponent
+            arc={this.state.current_arc}
+            message={this.state.message}
+            next={this.handleNext} disableNext={this.state.next_sha === this.state.current_sha}
+            previous={this.handleBack} disablePrevious={this.state.prev_sha === null}
+            theory={this.handleTheory} disableTheory={this.state.theory.length === 0}>
+          </MessageComponent>
+          {
+            this.state.files.length > 0 ?
+              <Tabset key={this.state.current_sha} files={remove_theory(this.state.theory, this.state.files)}></Tabset>
+              :
+              null
+          }
+        </div>
+      );
+
+    } else {
+      return (
+        <div className="App"></div>
+      );
     }
 
 
-    return (
-      <div className="App">
-        <Notifications />
-        <MessageComponent
-          arc={this.state.current_arc}
-          message={this.state.message}
-          next={this.handleNext} disableNext={this.state.next_sha === this.state.current_sha}
-          previous={this.handleBack} disablePrevious={this.state.prev_sha === null}
-          theory={this.handleTheory} disableTheory={this.state.theory.length === 0}>
-        </MessageComponent>
-        {
-          this.state.files.length > 0 ?
-            <Tabset key={this.state.current_sha} files={remove_theory(this.state.theory, this.state.files)}></Tabset>
-            :
-            null
-        }
-      </div>
-    );
+
 
   }
 
@@ -118,7 +126,7 @@ class App extends Component {
           type: response.data.type,
           next_sha: response.data.next_sha,
           current_sha: response.data.current_sha,
-          prev_sha: this.state.current_sha,
+          prev_sha: response.data.prev_sha,
           message: response.data.message,
           current_arc: response.data.type === "arc" ? response.data.message : this.state.current_arc,
           files: response.data.type === "normal" ? parseDiff(response.data.files) : response.data.files,
