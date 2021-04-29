@@ -1,3 +1,11 @@
+# Docker
+
+!Make sure to run the backend first!
+Navigate to the project directory.
+Build an image with: `docker build -t sw_history_narratives_frontend .`
+Run container with: `docker run -p 3000:3000 sw_history_narratives_frontend`
+Access http://localhost:3000 in the browser to interact with the app.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
